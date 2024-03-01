@@ -1,5 +1,6 @@
 import pandas as pd
 import pickle
+import pycountry
 
 # load the dataset
 df = pd.read_csv("life_expectancy.csv")
@@ -45,18 +46,42 @@ report = report_missing_values(df)
 for country, cols in report.items():
     print(f"Country: {country} has more than 8 missing years in columns: {', '.join(cols)}")
 
-df.to_csv('life_expectancy_clean.csv')
-
 pickle_file_path = "missing_values_report.pkl"
 # save the dictionary to a file using pickle
 with open(pickle_file_path, 'wb') as pickle_file:
     pickle.dump(report, pickle_file)
 print(f"Report saved to {pickle_file_path}")
 
+# add column country code as mapping to Country
+country_names = df['Country'].unique()
+
+# get the ISO Alpha-3 code for a given country name
+def get_country_code(country_name):
+    try:
+        return pycountry.countries.lookup(country_name).alpha_3
+    except LookupError:
+        # Handle cases where the country name does not match exactly
+        # Implement any specific name adjustments here if necessary
+        return None
+
+# Map each country name to its ISO Alpha-3 code
+country_codes = [get_country_code(name) for name in country_names]
+
+# Create a DataFrame from the mapping
+country_code_mapping = pd.DataFrame({
+    'Country': country_names,
+    'country-code': country_codes
+})
+
+# Merge this mapping back into your original DataFrame
+df = df.merge(country_code_mapping, on='Country', how='left')
+
 # Load the dictionary back from the pickle file
 #with open(pickle_file_path, 'rb') as pickle_file:
 #    loaded_report = pickle.load(pickle_file)
 
 #print(loaded_report)
+
+df.to_csv('life_expectancy_clean.csv')
 
 
