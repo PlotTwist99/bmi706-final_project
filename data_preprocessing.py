@@ -63,21 +63,35 @@ print(f"Report saved to {pickle_file_path}")
 # add column country code as mapping to Country
 country_names = df['Country'].unique()
 # get the ISO Alpha-3 code for a given country name
-def get_country_code(country_name):
-    try:
-        return pycountry.countries.lookup(country_name).alpha_3
-    except LookupError:
+#def get_country_code(country_name):
+#    try:
+#        return pycountry.countries.lookup(country_name).alpha_3
+#    except LookupError:
         # if any error
+#        return None
+
+# get numeric country code
+def get_numeric_country_code(country_name):
+    try:
+        # Lookup the country by name, then access its numeric code attribute
+        country = pycountry.countries.lookup(country_name)
+        # The numeric code is returned as a string, you can format it or return as is
+        return int(country.numeric)
+    except LookupError:
+        # If a country name does not match, return None or a placeholder
         return None
 
+# Apply the function to each country name in your dataframe
+df['country_code_numeric'] = df['Country'].apply(get_numeric_country_code)
+
 # map each country name to its ISO Alpha-3 code
-country_codes = [get_country_code(name) for name in country_names]
-country_code_mapping = pd.DataFrame({
-    'Country': country_names,
-    'country-code': country_codes
-})
+#country_codes = [get_country_code(name) for name in country_names]
+#country_code_mapping = pd.DataFrame({
+#    'Country': country_names,
+#    'country-code': country_codes
+#})
 # merge this mapping back into original DataFrame
-df = df.merge(country_code_mapping, on='Country', how='left')
+#df = df.merge(country_code_mapping, on='Country', how='left')
 
 df.to_csv('life_expectancy_clean.csv')
 
