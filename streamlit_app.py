@@ -1,8 +1,8 @@
 # streamlit app code file
 import streamlit
-import MultiApp
+from multiapp import MultiApp
 from apps import streamlit_task1, streamlit_task2_4
-#from apps import streamlit_task1, streamlit_task2_4, smiles_viz
+#from apps import streamlit_task1, streamlit_task2_4, streamlit_task3
 
 
 app = MultiApp()

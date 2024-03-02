@@ -1,3 +1,8 @@
+###
+# Code from prior 706 project by Kezia Irene, Manqing Liang, Nate Greenbaum, and Nina Xiong
+# https://github.com/keziatesiman/bmi706-final_project
+###
+
 import streamlit
 
 class MultiApp:
