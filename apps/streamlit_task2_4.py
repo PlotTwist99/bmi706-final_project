@@ -44,10 +44,11 @@ def app():
 
     # Charts
     chart_width = 600
-    chart_height = 380
+    chart_height = 350
     country_selection = alt.selection_multi(fields=['Country'], empty='none', on='click',
                                              toggle='true', init=[{'Country': country} for country in default_countries])
-    year_selection = alt.selection_single(fields=['Year'], empty='none', on='click', init={'Year': default_year})
+    year_slider = alt.binding_range(min=life_expectancy['Year'].min(), max=life_expectancy['Year'].max(), step=1, name='Year: ')
+    year_selection = alt.selection_single(fields=['Year'], bind=year_slider, empty='none', on='click', init={'Year': default_year})
 
     top_base = alt.Chart(life_expectancy).properties(width=chart_width, height=chart_height)
 
